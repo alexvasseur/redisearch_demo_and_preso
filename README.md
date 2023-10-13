@@ -1,13 +1,6 @@
 # Redisearch Demo with Presentation
 
-### Presentation
-
-|File |Information |
-|--|--|
-|docs/RediSearch.pdf|PDF presentation|
-|docs/RediSearchPresentation.html|HTML (open in browser)|
-| | |
-
+A sample application for RediSearch showing index and queries for Redis, suggestion and auto-completion, full text search and fuzzy search, as well as aggregations.
 
 ## Running with Docker
 
