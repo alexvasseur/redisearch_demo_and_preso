@@ -23,7 +23,12 @@ cd redisearch_demo_and_preso
 docker-compose up
 ```
 
-[Open This Link in Your Browser](http://localhost:5000)
+Redis Insight is running on port 8001 using Redis Stack container.
+[Redis Insight](http://localhost:8001)
+
+The application is running on port 5000
+[Application web UI](http://localhost:5000)
+
 
 
 ## Running Locally
@@ -31,7 +36,7 @@ docker-compose up
 ### Starup docker container
 
 ```
-docker run --rm -p 6379:6379 redislabs/redisearch:latest
+docker run --rm -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 ```
 
 ### Install python requirements
