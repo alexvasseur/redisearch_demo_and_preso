@@ -20,7 +20,7 @@ slideNumber: false
 * Loading Data
 * Searching
 * Aggregating
-* RedisLabs Extras
+* Extras
 
 </small>
 
@@ -307,7 +307,7 @@ FT.CREATE fortune500
 
 ## Searching
 <small>
-https://oss.redislabs.com/redisearch/Query_Syntax/
+https://redis.io/docs/interact/search-and-query/query/
 </small>
 
 ---
@@ -418,7 +418,7 @@ client.search(Query("technology").limit_fields('sector')).docs
 ## Aggregations
 
 <small>
-https://oss.redislabs.com/redisearch/Aggregations/
+https://redis.io/docs/interact/search-and-query/query/aggregation/
 </small>
 
 ---
@@ -479,13 +479,13 @@ client.aggregate(ar).rows
 
 ---
 
-## RedisLabs Extras
+## Extras
 
 ---
 
 ### Redis Insight
 
-https://redislabs.com/redisinsight/
+https://redis.io/docs/connect/insight/
 
 Free!
 

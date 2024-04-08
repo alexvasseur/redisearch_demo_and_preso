@@ -1,3 +1,10 @@
+import collections
+try:
+    from collections import abc
+    collections.MutableMapping = abc.MutableMapping
+except:
+    pass
+
 from flask import Flask, render_template, request, redirect
 from flask_bootstrap import Bootstrap
 from flask_nav import Nav
@@ -14,7 +21,9 @@ import redis
 import json
 import string
 
-app = Flask(__name__)
+app = Flask(__name__,
+   static_url_path='/docs',
+   static_folder='docs')
 bootstrap = Bootstrap()
 
 if environ.get('REDIS_SERVER') is not None:
@@ -47,10 +56,13 @@ ac = AutoCompleter(
 
 nav = Nav()
 topbar = Navbar('',
-    View('Home', 'index'),
-    View('Aggregations', 'show_agg'),
+    View('About', 'about'),
+    View('Auto-completion and Search', 'index'),
     View('CEO Search', 'search_ceo'),
     View('Tag Search', 'search_tags'),
+    View('Aggregations', 'show_agg'),
+    #View('Presentation', 'preso'),
+    View('Example Queries', 'example_queries'),    
 )
 nav.register_element('top', topbar)
 
@@ -59,7 +71,10 @@ def agg_by(field):
    return (client.aggregate(ar).rows)
 
 def search_data(company):
-   j = client.search(Query(company).limit_fields('title').verbatim()).docs[0].__dict__
+   docs = client.search(Query(company).limit_fields('title').verbatim())
+   if (docs.total==0):
+      return {}
+   j = docs.docs[0].__dict__
    del j['id']
    del j['payload']
    return(j)
@@ -74,7 +89,8 @@ def index():
 def display():
    display = request.form
    info = search_data(display['account'])
-   return render_template('results.html', result = info)
+   query = 'FT.SEARCH fortune500 "{}" INFIELDS 1 title VERBATIM LIMIT 0 1'.format(display['account'])
+   return render_template('results.html', result = info, query=query)
 
 @app.route('/aggregate')
 def show_agg():
@@ -86,7 +102,10 @@ def agg_show():
    rows = agg_by(a['agg'])
    # Filter and Capitalize the strings
    rows=[(lambda x: [string.capwords(x[1]), x[3]])(x) for x in rows]
-   return render_template('aggresults.html', rows = rows, field = a['agg'].replace("@", '').capitalize())
+   return render_template('aggresults.html',
+      rows = rows,
+      field = a['agg'].replace("@", '').capitalize(),
+      query='FT.AGGREGATE fortune500 "*" GROUPBY 1 {} REDUCE COUNT 0 AS my_count SORTBY 2 @my_count DESC'.format(a['agg']))
 
 @app.route('/autocomplete')
 def auto_complete():
@@ -103,7 +122,9 @@ def display_ceo():
    form = request.form.to_dict()
    try:
       ceos = [(lambda x: [x.company, x.ceo, x.ceoTitle]) (x) for x in client.search(Query(form["ceo"]).limit_fields('ceo')).docs]
-      return render_template('displayceos.html', ceos = ceos)
+      return render_template('displayceos.html',
+         ceos = ceos,
+         query  = 'FT.SEARCH fortune500 "{}" INFIELDS 1 ceo LIMIT 0 100'.format(form["ceo"]))
    except Exception as e:
       return "<html><body><script> var timer = setTimeout(function() { window.location='/searchceo' }, 5000); </script> Bad Query : %s try again with  &percnt;NAME&percnt;</body> </html>" % e
 
@@ -117,12 +138,25 @@ def display_tags():
    tags = request.form.getlist('tgs')
    q = Query("@tags:{%s}" %("|".join(tags))).sort_by('rank', asc=True).paging(0, 100)
    res = [(lambda x: [x.rank, x.company, x.tags]) (x) for x in client.search(q).docs]
-   return render_template('displaytags.html', companies = res)
+   return render_template('displaytags.html',
+      companies = res,
+      query = 'FT.SEARCH fortune500 "@tags:{{{}}}" SORTBY rank ASC LIMIT 0 100'.format("|".join(tags)))
 
+@app.route('/preso')
+def preso():
+   return redirect("/docs/RediSearchPresentation.html", code=302)
+
+@app.route('/example')
+def example_queries():
+   return render_template('example_queries.html')
+
+@app.route('/about')
+def about():
+   return render_template('about.html')
 
 
 if __name__ == '__main__':
    bootstrap.init_app(app)
    nav.init_app(app)
    app.debug = True
-   app.run(port=5000, host="0.0.0.0")
+   app.run(port=8080, host="0.0.0.0")

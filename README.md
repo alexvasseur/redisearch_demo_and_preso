@@ -19,8 +19,8 @@ docker-compose up
 Redis Insight is running on port 8001 using Redis Stack container.
 [Redis Insight](http://localhost:8001)
 
-The application is running on port 5000
-[Application web UI](http://localhost:5000)
+The application is running on port 8080
+[Application web UI](http://localhost:8080)
 
 
 
@@ -39,6 +39,12 @@ python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
 ```
+or
+```
+pipenv install -r requirements.txt
+pipenv run python3 -m pip install setuptools
+pipenv run python app.py
+```
 
 ### Start the flask app
 
@@ -48,7 +54,7 @@ python3 app.py
 
 ### Navigate to the home page
 
-1) [Webapp](http://localhost:5000)
+1) [Webapp](http://localhost:8080)
 
 2) Data will automatically load if the key is not already present
 

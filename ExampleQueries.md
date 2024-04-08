@@ -2,8 +2,8 @@
 
 ## Before you begin
 
-- load the data by simply opening up the [UI](http://localhost:5000)
-- go the the Search UI in [RedisInsight](http://localhost:8001/instance/b3268041-9940-43e3-b375-0857a8d1ce08/redisearch/)
+- load the data by simply opening up the [UI](http://localhost:8080)
+- go the the Search UI in [RedisInsight](http://localhost:8001)
 
 ## Searches
 
@@ -58,7 +58,7 @@ NOTE: field must be marked as Sortable
 
 ## Aggregations
 
-Aggregation functions are available here: https://oss.redislabs.com/redisearch/Aggregations/#list_of_field_apply_functions
+Aggregation functions are available here: https://redis.io/docs/interact/search-and-query/query/aggregation/
 
 ### Aggregate by State with a function
 
