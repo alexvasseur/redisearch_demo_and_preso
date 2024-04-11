@@ -11,9 +11,7 @@ A sample application for RediSearch showing index and queries for Redis, suggest
 ### Running Dockerized Version
 
 ```
-git clone https://github.com/maguec/redisearch_demo_and_preso
-cd redisearch_demo_and_preso
-docker-compose up
+docker compose up
 ```
 
 Redis Insight is running on port 8001 using Redis Stack container.
@@ -54,11 +52,7 @@ python3 app.py
 
 ### Navigate to the home page
 
-1) [Webapp](http://localhost:8080)
-
-2) Data will automatically load if the key is not already present
-
-3) Start typing in the text box
+[Webapp](http://localhost:8080)
 
 ### Redis Insight
 
